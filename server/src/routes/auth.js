@@ -1,5 +1,6 @@
 import express from 'express'
 import rateLimit from 'express-rate-limit'
+import bcrypt from 'bcryptjs'
 import { OAuth2Client } from 'google-auth-library'
 import jwt from 'jsonwebtoken'
 import { config } from '../config.js'
@@ -19,11 +20,73 @@ const authLimiter = rateLimit({
 function publicUser(user) {
   return {
     id: user.id,
-    email: user.email,
+    username: user.username || '',
+    email: user.email || '',
     name: user.name,
     avatar: user.avatar,
   }
 }
+
+function signSession(user) {
+  return jwt.sign({}, config.jwtSecret, {
+    subject: user.id,
+    expiresIn: '7d',
+  })
+}
+
+function normalizeUsername(value) {
+  return typeof value === 'string' ? value.trim().toLowerCase() : ''
+}
+
+function validUsername(username) {
+  return /^[\p{L}\p{N}_]{3,30}$/u.test(username)
+}
+
+router.post('/register', authLimiter, async (req, res, next) => {
+  try {
+    const username = normalizeUsername(req.body?.username)
+    const password = typeof req.body?.password === 'string' ? req.body.password : ''
+
+    if (!validUsername(username)) {
+      return res.status(400).json({
+        message: 'Το username πρέπει να έχει 3-30 γράμματα, αριθμούς ή κάτω παύλα.',
+      })
+    }
+    if (password.length < 8 || password.length > 128) {
+      return res.status(400).json({ message: 'Ο κωδικός πρέπει να έχει 8-128 χαρακτήρες.' })
+    }
+
+    const existingUser = await User.exists({ username })
+    if (existingUser) {
+      return res.status(409).json({ message: 'Αυτό το username χρησιμοποιείται ήδη.' })
+    }
+
+    const passwordHash = await bcrypt.hash(password, 12)
+    const user = await User.create({ username, name: username, passwordHash })
+    return res.status(201).json({ token: signSession(user), user: publicUser(user) })
+  } catch (error) {
+    if (error?.code === 11000) {
+      return res.status(409).json({ message: 'Αυτό το username χρησιμοποιείται ήδη.' })
+    }
+    return next(error)
+  }
+})
+
+router.post('/login', authLimiter, async (req, res, next) => {
+  try {
+    const username = normalizeUsername(req.body?.username)
+    const password = typeof req.body?.password === 'string' ? req.body.password : ''
+    const user = await User.findOne({ username }).select('+passwordHash')
+
+    if (!user?.passwordHash || !(await bcrypt.compare(password, user.passwordHash))) {
+      return res.status(401).json({ message: 'Λάθος username ή κωδικός.' })
+    }
+
+    return res.json({ token: signSession(user), user: publicUser(user) })
+  } catch (error) {
+    return next(error)
+  }
+})
 
 router.post('/google', authLimiter, async (req, res, next) => {
   try {
@@ -53,12 +116,7 @@ router.post('/google', authLimiter, async (req, res, next) => {
       { new: true, upsert: true, runValidators: true },
     )
 
-    const token = jwt.sign({}, config.jwtSecret, {
-      subject: user.id,
-      expiresIn: '7d',
-    })
-
-    return res.json({ token, user: publicUser(user) })
+    return res.json({ token: signSession(user), user: publicUser(user) })
   } catch (error) {
     return next(error)
   }

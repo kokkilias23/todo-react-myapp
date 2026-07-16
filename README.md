@@ -9,6 +9,7 @@ A full-stack Todo application with Google login and per-user cloud storage.
 - ✅ Press Enter to add a task
 - ✅ Delete tasks
 - ✅ Sign in with Google
+- ✅ Create an account and sign in with username/password
 - ✅ Save each user's progress in MongoDB
 - ✅ Clean and responsive UI
 

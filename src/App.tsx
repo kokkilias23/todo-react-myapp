@@ -4,6 +4,7 @@ import TodoForm from './Components/TodoForm'
 import TodoItem from './Components/TodoItem'
 import Footer from './Components/Footer.tsx'
 import GoogleLoginButton from './Components/GoogleLoginButton.tsx'
+import CredentialsForm from './Components/CredentialsForm.tsx'
 import { api, session } from './api.ts'
 import type { Task, User } from './types.ts'
 
@@ -51,6 +52,25 @@ function App() {
             setError(loginError instanceof Error ? loginError.message : 'Η σύνδεση απέτυχε.')
         } finally {
             setLoading(false)
+        }
+    }
+
+    async function handleCredentials(
+        mode: 'login' | 'register',
+        username: string,
+        password: string,
+    ) {
+        setError('')
+        try {
+            const result = mode === 'register'
+                ? await api.register(username, password)
+                : await api.login(username, password)
+            session.setToken(result.token)
+            setUser(result.user)
+            await loadTasks()
+        } catch (authError) {
+            setError(authError instanceof Error ? authError.message : 'Η σύνδεση απέτυχε.')
+            throw authError
         }
     }
 
@@ -104,6 +124,12 @@ function App() {
                 {!loading && !user && (
                     <div className="text-center">
                         <p className="text-gray-600 mb-5">Συνδέσου για να αποθηκεύεται η πρόοδός σου.</p>
+                        <CredentialsForm onSubmit={handleCredentials} />
+                        <div className="flex items-center gap-3 my-5">
+                            <div className="h-px bg-gray-200 flex-1" />
+                            <span className="text-xs text-gray-400">ή</span>
+                            <div className="h-px bg-gray-200 flex-1" />
+                        </div>
                         <GoogleLoginButton onCredential={handleGoogleCredential} />
                     </div>
                 )}
@@ -115,7 +141,9 @@ function App() {
                                 {user.avatar && <img src={user.avatar} alt="" className="w-9 h-9 rounded-full" />}
                                 <div className="min-w-0">
                                     <p className="font-medium text-gray-700 truncate">{user.name}</p>
-                                    <p className="text-xs text-gray-400 truncate">{user.email}</p>
+                                    <p className="text-xs text-gray-400 truncate">
+                                        {user.email || `@${user.username}`}
+                                    </p>
                                 </div>
                             </div>
                             <button onClick={handleLogout} className="text-sm text-blue-600 hover:underline ml-3">
