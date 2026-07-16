@@ -1,25 +1,34 @@
-import { useState } from 'react'
-
 type Props = {
     text: string
+    done: boolean
+    onToggle: () => void
+    onDelete: () => void
 }
 
-function TodoItem({ text }: Props) {
-    const [done, setDone] = useState(false)
-
+function TodoItem({ text, done, onToggle, onDelete }: Props) {
     return (
         <div className="flex items-center gap-3 bg-gray-50 border border-gray-200 rounded-xl px-4 py-3">
-            <div
-                onClick={() => setDone(!done)}
+            <button
+                type="button"
+                onClick={onToggle}
+                aria-label={done ? 'Σήμανση ως μη ολοκληρωμένο' : 'Σήμανση ως ολοκληρωμένο'}
                 className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0 cursor-pointer transition ${
                     done ? 'bg-green-500' : 'bg-gray-400'
                 }`}
             >
                 {done ? '✓' : '-'}
-            </div>
-            <p className={`text-gray-700 ${done ? 'line-through text-gray-400' : ''}`}>
+            </button>
+            <p className={`flex-1 break-words text-gray-700 ${done ? 'line-through text-gray-400' : ''}`}>
                 {text}
             </p>
+            <button
+                type="button"
+                onClick={onDelete}
+                aria-label="Διαγραφή task"
+                className="text-gray-400 hover:text-red-600 px-1 text-xl transition"
+            >
+                ×
+            </button>
         </div>
     )
 }
