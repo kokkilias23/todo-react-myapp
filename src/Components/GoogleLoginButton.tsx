@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
+import { translations, type Language } from '../i18n'
 
 type Props = {
   onCredential: (credential: string) => void
+  language: Language
 }
 
 type GoogleCredentialResponse = {
@@ -19,7 +21,7 @@ declare global {
           }) => void
           renderButton: (
             element: HTMLElement,
-            options: { theme: string; size: string; width: number; text: string },
+            options: { theme: string; size: string; width: number; text: string; locale: string },
           ) => void
         }
       }
@@ -27,10 +29,11 @@ declare global {
   }
 }
 
-function GoogleLoginButton({ onCredential }: Props) {
+function GoogleLoginButton({ onCredential, language }: Props) {
   const buttonRef = useRef<HTMLDivElement>(null)
   const [scriptFailed, setScriptFailed] = useState(false)
   const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID
+  const t = translations[language]
 
   useEffect(() => {
     if (!clientId || !buttonRef.current) return
@@ -47,6 +50,7 @@ function GoogleLoginButton({ onCredential }: Props) {
         size: 'large',
         width: 320,
         text: 'continue_with',
+        locale: language,
       })
     }
 
@@ -67,14 +71,14 @@ function GoogleLoginButton({ onCredential }: Props) {
     script.onload = renderGoogleButton
     script.onerror = () => setScriptFailed(true)
     document.head.appendChild(script)
-  }, [clientId, onCredential])
+  }, [clientId, language, onCredential])
 
   if (!clientId) {
-    return <p className="text-sm text-red-600">Λείπει το Google Client ID.</p>
+    return <p className="text-sm text-red-600">{t.missingGoogleId}</p>
   }
 
   if (scriptFailed) {
-    return <p className="text-sm text-red-600">Δεν φορτώθηκε το Google Login.</p>
+    return <p className="text-sm text-red-600">{t.googleLoadError}</p>
   }
 
   return <div ref={buttonRef} className="min-h-11 flex justify-center" />

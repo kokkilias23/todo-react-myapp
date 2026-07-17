@@ -1,17 +1,21 @@
+import { translations, type Language } from '../i18n'
+
 type Props = {
     text: string
     done: boolean
     onToggle: () => void
     onDelete: () => void
+    language: Language
 }
 
-function TodoItem({ text, done, onToggle, onDelete }: Props) {
+function TodoItem({ text, done, onToggle, onDelete, language }: Props) {
+    const t = translations[language]
     return (
         <div className="flex items-center gap-3 bg-gray-50 border border-gray-200 rounded-xl px-4 py-3">
             <button
                 type="button"
                 onClick={onToggle}
-                aria-label={done ? 'Σήμανση ονείρου ως μη πραγματοποιημένο' : 'Σήμανση ονείρου ως πραγματοποιημένο'}
+                aria-label={done ? t.markUnfulfilled : t.markFulfilled}
                 className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0 cursor-pointer transition ${
                     done ? 'bg-green-500' : 'bg-gray-400'
                 }`}
@@ -24,7 +28,7 @@ function TodoItem({ text, done, onToggle, onDelete }: Props) {
             <button
                 type="button"
                 onClick={onDelete}
-                aria-label="Διαγραφή ονείρου"
+                aria-label={t.deleteDream}
                 className="text-gray-400 hover:text-red-600 px-1 text-xl transition"
             >
                 ×

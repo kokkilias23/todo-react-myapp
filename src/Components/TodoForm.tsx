@@ -1,12 +1,15 @@
 
 import { useState } from 'react'
+import { translations, type Language } from '../i18n'
 
 type Props = {
     onAdd: (text: string) => void
+    language: Language
 }
 
-function TodoForm({ onAdd }: Props) {
+function TodoForm({ onAdd, language }: Props) {
     const [input, setInput] = useState('')
+    const t = translations[language]
 
     function handleClick() {
         if (input.trim() === '') return
@@ -18,7 +21,7 @@ function TodoForm({ onAdd }: Props) {
         <div className="flex gap-2">
             <input
                 type="text"
-                placeholder="Γράψε ένα όνειρο..."
+                placeholder={t.dreamPlaceholder}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleClick()}
@@ -26,7 +29,7 @@ function TodoForm({ onAdd }: Props) {
             />
             <button onClick={handleClick}
                 className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
-            >Αποθήκευση</button>
+            >{t.save}</button>
         </div>
     )
 }

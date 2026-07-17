@@ -1,14 +1,17 @@
 import { useState } from 'react'
+import { translations, type Language } from '../i18n'
 
 type Props = {
   onSubmit: (mode: 'login' | 'register', username: string, password: string) => Promise<void>
+  language: Language
 }
 
-function CredentialsForm({ onSubmit }: Props) {
+function CredentialsForm({ onSubmit, language }: Props) {
   const [mode, setMode] = useState<'login' | 'register'>('login')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const t = translations[language]
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -37,7 +40,7 @@ function CredentialsForm({ onSubmit }: Props) {
             mode === 'login' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500'
           }`}
         >
-          Σύνδεση
+          {t.login}
         </button>
         <button
           type="button"
@@ -46,13 +49,13 @@ function CredentialsForm({ onSubmit }: Props) {
             mode === 'register' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500'
           }`}
         >
-          Εγγραφή
+          {t.register}
         </button>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-3">
         <label className="block text-left">
-          <span className="text-sm text-gray-600">Username</span>
+          <span className="text-sm text-gray-600">{t.username}</span>
           <input
             type="text"
             value={username}
@@ -65,7 +68,7 @@ function CredentialsForm({ onSubmit }: Props) {
           />
         </label>
         <label className="block text-left">
-          <span className="text-sm text-gray-600">Κωδικός</span>
+          <span className="text-sm text-gray-600">{t.password}</span>
           <input
             type="password"
             value={password}
@@ -82,7 +85,7 @@ function CredentialsForm({ onSubmit }: Props) {
           disabled={submitting}
           className="w-full bg-blue-600 text-white rounded-lg py-2.5 font-medium hover:bg-blue-700 disabled:opacity-60 transition"
         >
-          {submitting ? 'Παρακαλώ περιμένετε...' : mode === 'login' ? 'Σύνδεση' : 'Δημιουργία λογαριασμού'}
+          {submitting ? t.pleaseWait : mode === 'login' ? t.login : t.createAccount}
         </button>
       </form>
     </div>
