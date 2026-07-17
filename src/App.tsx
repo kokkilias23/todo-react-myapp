@@ -233,6 +233,12 @@ function App() {
 
                 {error && <p className={`mt-4 text-center text-sm ${user ? 'text-rose-300' : 'text-red-600'}`}>{error}</p>}
             </div>
+            <p className="relative z-10 max-w-lg mx-auto mt-8 px-6 text-center text-sm leading-6 text-indigo-100/75">
+          {language === 'el'
+        ? 'Η Ελπίδα είναι η απόφαση να συνεχίσεις να ταξιδεύεις,      ακόμη κι όταν ο ορίζοντας είναι κρυμμένος. Δεν υπόσχεται ότι όλα θα πάνε καλά· σου θυμίζει ότι αξίζει να συνεχίσεις.'
+        : 'Hope is the decision to keep traveling, even when the horizon is hidden. It does not promise that everything will turn out well; it reminds you that it is worth going on.'}
+        </p>
+
             <Footer dark={Boolean(user)} />
         </div>
     )
