@@ -11,7 +11,7 @@ function TodoItem({ text, done, onToggle, onDelete }: Props) {
             <button
                 type="button"
                 onClick={onToggle}
-                aria-label={done ? 'Σήμανση ως μη ολοκληρωμένο' : 'Σήμανση ως ολοκληρωμένο'}
+                aria-label={done ? 'Σήμανση ονείρου ως μη πραγματοποιημένο' : 'Σήμανση ονείρου ως πραγματοποιημένο'}
                 className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0 cursor-pointer transition ${
                     done ? 'bg-green-500' : 'bg-gray-400'
                 }`}
@@ -24,7 +24,7 @@ function TodoItem({ text, done, onToggle, onDelete }: Props) {
             <button
                 type="button"
                 onClick={onDelete}
-                aria-label="Διαγραφή task"
+                aria-label="Διαγραφή ονείρου"
                 className="text-gray-400 hover:text-red-600 px-1 text-xl transition"
             >
                 ×

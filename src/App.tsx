@@ -80,7 +80,7 @@ function App() {
             const { task } = await api.createTask(text)
             setTasks((current) => [task, ...current])
         } catch (taskError) {
-            setError(taskError instanceof Error ? taskError.message : 'Το task δεν αποθηκεύτηκε.')
+            setError(taskError instanceof Error ? taskError.message : 'Το όνειρο δεν αποθηκεύτηκε.')
         }
     }
 
@@ -102,7 +102,7 @@ function App() {
             await api.deleteTask(id)
             setTasks((current) => current.filter((task) => task._id !== id))
         } catch (taskError) {
-            setError(taskError instanceof Error ? taskError.message : 'Το task δεν διαγράφηκε.')
+            setError(taskError instanceof Error ? taskError.message : 'Το όνειρο δεν διαγράφηκε.')
         }
     }
 
@@ -116,14 +116,14 @@ function App() {
     return (
         <div className="min-h-screen bg-amber-200 flex flex-col items-center px-4 pt-16">
             <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md">
-                <h1 className="text-3xl font-bold text-center text-blue-600 mb-3">My Todo App</h1>
-                <p className="text-center text-gray-400 text-sm mb-6">Διαχειρίσου τις καθημερινές σου υποχρεώσεις εύκολα και γρήγορα!</p>
+                <h1 className="text-3xl font-bold text-center text-blue-600 mb-3">My Dream Box</h1>
+                <p className="text-center text-gray-400 text-sm mb-6">Το προσωπικό σου Dream Box.</p>
 
                 {loading && <p className="text-center text-gray-500">Φόρτωση...</p>}
 
                 {!loading && !user && (
                     <div className="text-center">
-                        <p className="text-gray-600 mb-5">Συνδέσου για να αποθηκεύεται η πρόοδός σου.</p>
+                        <p className="text-gray-600 mb-5">Συνδέσου για να γράψεις και να αποθηκεύσεις τα όνειρά σου.</p>
                         <CredentialsForm onSubmit={handleCredentials} />
                         <div className="flex items-center gap-3 my-5">
                             <div className="h-px bg-gray-200 flex-1" />
@@ -154,7 +154,7 @@ function App() {
                         <TodoForm onAdd={handleAdd} />
                         <div className="mt-6 flex flex-col gap-3">
                             {tasks.length === 0 && (
-                                <p className="text-center text-sm text-gray-400 py-4">Δεν έχεις tasks ακόμη.</p>
+                                <p className="text-center text-sm text-gray-400 py-4">Το Dream Box σου είναι ακόμη άδειο.</p>
                             )}
                             {tasks.map((task) => (
                                 <TodoItem

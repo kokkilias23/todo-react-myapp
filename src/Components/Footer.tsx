@@ -5,7 +5,7 @@ const Footer = () => {
         <>
             <footer className="bg-cf-dark-gray text-black">
                 <div className="container mx-auto py-8 text-center">
-                    &copy; {currentYear} For Coding Factory 9, created by Ilias Kokkalidis. All Rights reserved.
+                    &copy; {currentYear} My Dream Box, created by Ilias Kokkalidis. All rights reserved.
                 </div>
             </footer>
         </>
