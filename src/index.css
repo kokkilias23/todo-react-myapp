@@ -1,1 +1,120 @@
 @import "tailwindcss";
+
+@keyframes dream-twinkle {
+    0%, 100% {
+        opacity: 0.35;
+    }
+    50% {
+        opacity: 0.9;
+    }
+}
+
+@keyframes dream-cloud-drift {
+    0% {
+        transform: translateX(-8vw);
+    }
+    50% {
+        transform: translateX(8vw);
+    }
+    100% {
+        transform: translateX(-8vw);
+    }
+}
+
+.dream-sky {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.dream-stars,
+.dream-stars::before,
+.dream-stars::after {
+    position: absolute;
+    inset: 0;
+    content: "";
+    background-repeat: repeat;
+}
+
+.dream-stars {
+    background-image:
+        radial-gradient(circle, rgb(255 255 255 / 0.95) 1px, transparent 1.5px),
+        radial-gradient(circle, rgb(196 181 253 / 0.8) 1px, transparent 1.5px);
+    background-position: 0 0, 35px 55px;
+    background-size: 95px 95px, 145px 145px;
+    animation: dream-twinkle 5s ease-in-out infinite;
+}
+
+.dream-stars::before {
+    background-image: radial-gradient(circle, rgb(255 255 255 / 0.75) 1.5px, transparent 2px);
+    background-position: 25px 15px;
+    background-size: 190px 190px;
+    animation: dream-twinkle 7s ease-in-out 1.5s infinite;
+}
+
+.dream-stars::after {
+    background-image: radial-gradient(circle, rgb(253 230 138 / 0.9) 1px, transparent 2px);
+    background-position: 85px 65px;
+    background-size: 240px 240px;
+    animation: dream-twinkle 9s ease-in-out 3s infinite;
+}
+
+.dream-moon {
+    position: absolute;
+    top: 7%;
+    right: 9%;
+    width: clamp(70px, 10vw, 130px);
+    aspect-ratio: 1;
+    border-radius: 9999px;
+    background: rgb(255 248 214);
+    box-shadow:
+        0 0 25px rgb(255 248 214 / 0.65),
+        0 0 70px rgb(196 181 253 / 0.45);
+    opacity: 0.9;
+}
+
+.dream-moon::after {
+    position: absolute;
+    content: "";
+    width: 22%;
+    aspect-ratio: 1;
+    top: 25%;
+    left: 23%;
+    border-radius: 9999px;
+    background: rgb(221 214 254 / 0.3);
+    box-shadow: 30px 24px 0 5px rgb(221 214 254 / 0.22);
+}
+
+.dream-cloud {
+    position: absolute;
+    width: 34vw;
+    min-width: 260px;
+    height: 110px;
+    border-radius: 9999px;
+    background: rgb(255 255 255 / 0.09);
+    filter: blur(18px);
+    animation: dream-cloud-drift 18s ease-in-out infinite;
+}
+
+.dream-cloud-one {
+    left: -6%;
+    bottom: 13%;
+}
+
+.dream-cloud-two {
+    right: -8%;
+    top: 34%;
+    opacity: 0.65;
+    animation-delay: -8s;
+    animation-duration: 24s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .dream-stars,
+    .dream-stars::before,
+    .dream-stars::after,
+    .dream-cloud {
+        animation: none;
+    }
+}

@@ -13,6 +13,7 @@ has a private Dream Box that stays synchronized across devices.
 - Secure password hashing with bcrypt
 - JWT-based authentication
 - Add, achieve, and delete dreams
+- Optionally assign a target month and year to each dream
 - Store a separate wish list for every user
 - Restore the user's Dream Box after a refresh
 - Responsive interface built with Tailwind CSS

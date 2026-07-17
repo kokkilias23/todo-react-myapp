@@ -48,10 +48,10 @@ export const api = {
     }),
   currentUser: () => request<{ user: User }>('/auth/me'),
   getTasks: () => request<{ tasks: Task[] }>('/tasks'),
-  createTask: (text: string) =>
+  createTask: (text: string, targetMonth?: string) =>
     request<{ task: Task }>('/tasks', {
       method: 'POST',
-      body: JSON.stringify({ text }),
+      body: JSON.stringify({ text, targetMonth }),
     }),
   updateTask: (id: string, updates: Partial<Pick<Task, 'text' | 'completed'>>) =>
     request<{ task: Task }>(`/tasks/${id}`, {

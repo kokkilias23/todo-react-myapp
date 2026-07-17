@@ -16,6 +16,8 @@ export const translations = {
     pleaseWait: 'Παρακαλώ περιμένετε...',
     createAccount: 'Δημιουργία λογαριασμού',
     dreamPlaceholder: 'Γράψε ένα όνειρο...',
+    targetMonth: 'Μήνας και έτος στόχου (προαιρετικά)',
+    target: 'Στόχος',
     save: 'Αποθήκευση',
     markUnfulfilled: 'Σήμανση ονείρου ως μη πραγματοποιημένο',
     markFulfilled: 'Σήμανση ονείρου ως πραγματοποιημένο',
@@ -42,6 +44,8 @@ export const translations = {
     pleaseWait: 'Please wait...',
     createAccount: 'Create account',
     dreamPlaceholder: 'Write down a dream...',
+    targetMonth: 'Target month and year (optional)',
+    target: 'Target',
     save: 'Save',
     markUnfulfilled: 'Mark dream as unfulfilled',
     markFulfilled: 'Mark dream as fulfilled',
@@ -79,6 +83,14 @@ const apiErrorTranslations: Record<string, { el: string; en: string }> = {
   'Invalid or expired session': {
     el: 'Η σύνδεσή σου έληξε. Συνδέσου ξανά.',
     en: 'Your session has expired. Please sign in again.',
+  },
+  'Target month must use YYYY-MM format': {
+    el: 'Ο μήνας στόχου δεν είναι έγκυρος.',
+    en: 'The target month is invalid.',
+  },
+  'Target date must use a valid YYYY-MM-DD format': {
+    el: 'Η ημερομηνία στόχου δεν είναι έγκυρη.',
+    en: 'The target date is invalid.',
   },
 }
 

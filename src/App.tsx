@@ -91,10 +91,10 @@ function App() {
         }
     }
 
-    async function handleAdd(text: string) {
+    async function handleAdd(text: string, targetMonth?: string) {
         setError('')
         try {
-            const { task } = await api.createTask(text)
+            const { task } = await api.createTask(text, targetMonth)
             setTasks((current) => [task, ...current])
         } catch (taskError) {
             setError(localizeApiError(taskError, language, t.saveError))
@@ -131,27 +131,52 @@ function App() {
     }
 
     return (
-        <div className="min-h-screen bg-amber-200 flex flex-col items-center px-4 pt-16">
-            <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md">
+        <div className={`min-h-screen flex flex-col items-center px-4 pt-16 relative overflow-hidden transition-colors duration-700 ${
+            user
+                ? 'bg-gradient-to-br from-slate-950 via-indigo-950 to-purple-900'
+                : 'bg-gradient-to-br from-amber-100 via-amber-200 to-orange-100'
+        }`}>
+            {user && (
+                <div className="dream-sky" aria-hidden="true">
+                    <div className="dream-stars" />
+                    <div className="dream-moon" />
+                    <div className="dream-cloud dream-cloud-one" />
+                    <div className="dream-cloud dream-cloud-two" />
+                </div>
+            )}
+
+            <div className={`relative z-10 rounded-2xl p-8 w-full max-w-md transition-all duration-700 ${
+                user
+                    ? 'bg-slate-950/55 backdrop-blur-xl border border-violet-300/20 shadow-2xl shadow-purple-950/60 ring-1 ring-white/10'
+                    : 'bg-white shadow-lg'
+            }`}>
                 <div className="flex justify-center items-center gap-2 mb-5 text-sm">
                     <button
                         type="button"
                         onClick={() => changeLanguage('el')}
-                        className={language === 'el' ? 'font-semibold text-blue-600' : 'text-gray-500 hover:text-blue-600'}
+                        className={language === 'el'
+                            ? `font-semibold ${user ? 'text-violet-300' : 'text-blue-600'}`
+                            : user ? 'text-white/45 hover:text-violet-200' : 'text-gray-500 hover:text-blue-600'}
                     >
                         🇬🇷 Ελληνικά
                     </button>
-                    <span className="text-gray-300">|</span>
+                    <span className={user ? 'text-white/20' : 'text-gray-300'}>|</span>
                     <button
                         type="button"
                         onClick={() => changeLanguage('en')}
-                        className={language === 'en' ? 'font-semibold text-blue-600' : 'text-gray-500 hover:text-blue-600'}
+                        className={language === 'en'
+                            ? `font-semibold ${user ? 'text-violet-300' : 'text-blue-600'}`
+                            : user ? 'text-white/45 hover:text-violet-200' : 'text-gray-500 hover:text-blue-600'}
                     >
                         🇬🇧 English
                     </button>
                 </div>
-                <h1 className="text-3xl font-bold text-center text-blue-600 mb-3">{t.title}</h1>
-                <p className="text-center text-gray-400 text-sm mb-6">{t.tagline}</p>
+                <h1 className={`text-3xl font-bold text-center mb-3 ${
+                    user
+                        ? 'text-transparent bg-clip-text bg-gradient-to-r from-violet-300 via-fuchsia-200 to-amber-200'
+                        : 'text-blue-600'
+                }`}>{t.title}</h1>
+                <p className={`text-center text-sm mb-6 ${user ? 'text-indigo-100/65' : 'text-gray-400'}`}>{t.tagline}</p>
 
                 {loading && <p className="text-center text-gray-500">{t.loading}</p>}
 
@@ -170,17 +195,17 @@ function App() {
 
                 {!loading && user && (
                     <>
-                        <div className="flex items-center justify-between mb-5 pb-4 border-b border-gray-100">
+                        <div className="flex items-center justify-between mb-5 pb-4 border-b border-white/15">
                             <div className="flex items-center gap-2 min-w-0">
                                 {user.avatar && <img src={user.avatar} alt="" className="w-9 h-9 rounded-full" />}
                                 <div className="min-w-0">
-                                    <p className="font-medium text-gray-700 truncate">{user.name}</p>
-                                    <p className="text-xs text-gray-400 truncate">
+                                    <p className="font-medium text-white truncate">{user.name}</p>
+                                    <p className="text-xs text-indigo-200/60 truncate">
                                         {user.email || `@${user.username}`}
                                     </p>
                                 </div>
                             </div>
-                            <button onClick={handleLogout} className="text-sm text-blue-600 hover:underline ml-3">
+                            <button onClick={handleLogout} className="text-sm text-violet-300 hover:text-fuchsia-200 hover:underline ml-3 transition">
                                 {t.logout}
                             </button>
                         </div>
@@ -188,13 +213,15 @@ function App() {
                         <TodoForm onAdd={handleAdd} language={language} />
                         <div className="mt-6 flex flex-col gap-3">
                             {tasks.length === 0 && (
-                                <p className="text-center text-sm text-gray-400 py-4">{t.emptyBox}</p>
+                                <p className="text-center text-sm text-indigo-100/55 py-4">{t.emptyBox}</p>
                             )}
                             {tasks.map((task) => (
                                 <TodoItem
                                     key={task._id}
                                     text={task.text}
                                     done={task.completed}
+                                    targetMonth={task.targetMonth}
+                                    targetDate={task.targetDate}
                                     onToggle={() => void handleToggle(task)}
                                     onDelete={() => void handleDelete(task._id)}
                                     language={language}
@@ -204,9 +231,9 @@ function App() {
                     </>
                 )}
 
-                {error && <p className="mt-4 text-center text-sm text-red-600">{error}</p>}
+                {error && <p className={`mt-4 text-center text-sm ${user ? 'text-rose-300' : 'text-red-600'}`}>{error}</p>}
             </div>
-            <Footer/>
+            <Footer dark={Boolean(user)} />
         </div>
     )
 }

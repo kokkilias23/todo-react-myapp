@@ -10,6 +10,8 @@ export type Task = {
   _id: string
   text: string
   completed: boolean
+  targetMonth?: string
+  targetDate?: string
   createdAt: string
   updatedAt: string
 }
